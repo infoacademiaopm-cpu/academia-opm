@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 420px;
+  padding: 24px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 48px 44px 40px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.07);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1a5fa8, #2e86de, #54a0ff);
+}
+
+.brand {
+  margin-bottom: 28px;
+}
+
+.brand-letters {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.brand-letters span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #1a5fa8;
+  line-height: 1;
+  letter-spacing: 6px;
+}
+
+.brand-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: #aaa;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.brand-line {
+  width: 40px;
+  height: 1px;
+  background: #1a5fa8;
+  margin: 14px auto 0;
+  opacity: 0.4;
+}
+
+.login-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: #999;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+#google-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.footer-note {
+  font-size: 11px;
+  color: #ccc;
+  margin-top: 4px;
+}
+
+/* ---- PERFIL ---- */
+#perfil {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.avatar-wrap {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e8f0fe;
+  box-shadow: 0 4px 16px rgba(26,95,168,0.15);
+}
+
+.avatar-check {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 22px;
+  height: 22px;
+  background: #1a5fa8;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: white;
+}
+
+.welcome-tag {
+  background: #f0f6ff;
+  color: #1a5fa8;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 16px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.user-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.1;
+}
+
+.user-email {
+  font-size: 13px;
+  font-weight: 300;
+  color: #aaa;
+}
+
+.divider-profile {
+  width: 32px;
+  height: 1px;
+  background: #eee;
+  margin: 4px auto;
+}
+
+.btn-logout {
+  background: none;
+  border: 1px solid #eee;
+  color: #bbb;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.btn-logout:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="brand">
+    <div class="brand-letters">
+      <span>O</span><span>P</span><span>M</span>
+    </div>
+    <div class="brand-sub">Academia</div>
+    <div class="brand-line"></div>
+  </div>
+
+  <!-- Vista login -->
+  <div id="login-view">
+    <p class="login-heading">Tu espacio de formación</p>
+    <p class="login-sub">Iniciá sesión con tu cuenta Google<br>para acceder a los cursos</p>
+
+    <div id="google-btn-container">
+      <div id="g_id_onload"
+        data-client_id="69585621593-rgh7f5t0njblcg5j8dnckqp6msclgbl3.apps.googleusercontent.com"
+        data-callback="handleCredentialResponse"
+        data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="signin_with"
+        data-shape="rectangular"
+        data-locale="es"
+        data-logo_alignment="left"
+        data-width="280">
+      </div>
+    </div>
+    <p class="footer-note">Osiscka · Ponce Laso · Morales</p>
+  </div>
+
+  <!-- Vista perfil -->
+  <div id="perfil">
+    <div class="avatar-wrap">
+      <img id="user-avatar" src="" alt="Foto de perfil" class="user-avatar"/>
+      <div class="avatar-check">✓</div>
+    </div>
+    <div class="welcome-tag">Bienvenido/a</div>
+    <p id="user-name" class="user-name"></p>
+    <p id="user-email" class="user-email"></p>
+    <div class="divider-profile"></div>
+    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+  </div>
+
+</div>
+
+<script>
+function parseJwt(token) {
+  const base64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+  const json = decodeURIComponent(atob(base64).split('').map(c =>
+    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  ).join(''));
+  return JSON.parse(json);
+}
+
+function mostrarPerfil(name, email, picture) {
+  document.getElementById('user-avatar').src = picture;
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('user-email').textContent = email;
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('perfil').style.display = 'flex';
+}
+
+function handleCredentialResponse(response) {
+  const user = parseJwt(response.credential);
+  sessionStorage.setItem('opm_user', JSON.stringify({
+    name: user.name, email: user.email, picture: user.picture
+  }));
+  mostrarPerfil(user.name, user.email, user.picture);
+}
+
+function logout() {
+  sessionStorage.removeItem('opm_user');
+  document.getElementById('login-view').style.display = 'block';
+  document.getElementById('perfil').style.display = 'none';
+  if (typeof google !== 'undefined') google.accounts.id.disableAutoSelect();
+}
+
+window.addEventListener('load', function() {
+  const saved = sessionStorage.getItem('opm_user');
+  if (saved) {
+    const u = JSON.parse(saved);
+    mostrarPerfil(u.name, u.email, u.picture);
+  }
+});
+</script>
+
+</body>
+</html>
