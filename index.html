@@ -109,6 +109,51 @@ body {
   animation: fadeIn 0.4s ease;
 }
 
+#no-acceso {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.4s ease;
+}
+
+.no-acceso-icon {
+  font-size: 40px;
+  margin-bottom: 4px;
+}
+
+.no-acceso-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.no-acceso-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: #999;
+  line-height: 1.6;
+}
+
+.btn-pagar {
+  background: #1a5fa8;
+  color: white;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-pagar:hover { background: #154f8a; }
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -195,6 +240,12 @@ body {
   border-color: #ff6b6b;
   color: #ff6b6b;
 }
+
+.verificando {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 8px;
+}
 </style>
 </head>
 <body>
@@ -231,6 +282,10 @@ body {
     <p class="footer-note">Osiscka · Ponce Laso · Morales</p>
   </div>
 
+  <div id="verificando-view" style="display:none;">
+    <p class="verificando">Verificando acceso...</p>
+  </div>
+
   <div id="perfil">
     <div class="avatar-wrap">
       <img id="user-avatar" src="" alt="Foto de perfil" class="user-avatar"/>
@@ -242,9 +297,19 @@ body {
     <div class="divider-profile"></div>
     <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
   </div>
+
+  <div id="no-acceso">
+    <div class="no-acceso-icon">🔒</div>
+    <p class="no-acceso-title">Acceso no habilitado</p>
+    <p class="no-acceso-sub">Tu pago aún no fue confirmado.<br>Completá el pago para acceder a los cursos.</p>
+    <a href="https://link.mercadopago.com.ar/academiaopm" class="btn-pagar" target="_blank">Ir al pago</a>
+    <button class="btn-logout" onclick="logout()" style="margin-top:8px;">Cerrar sesión</button>
+  </div>
 </div>
 
 <script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzm3axMvxQvcrLCcOenI5YzpXceQNaq1gDWSZQQX98Cj7T5L4QqtKtJk7XdWeuz8Lbx-w/exec";
+
 function parseJwt(token) {
   const base64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
   const json = decodeURIComponent(atob(base64).split('').map(c =>
@@ -258,7 +323,33 @@ function mostrarPerfil(name, email, picture) {
   document.getElementById('user-name').textContent = name;
   document.getElementById('user-email').textContent = email;
   document.getElementById('login-view').style.display = 'none';
+  document.getElementById('verificando-view').style.display = 'none';
+  document.getElementById('no-acceso').style.display = 'none';
   document.getElementById('perfil').style.display = 'flex';
+}
+
+function mostrarNoAcceso() {
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('verificando-view').style.display = 'none';
+  document.getElementById('perfil').style.display = 'none';
+  document.getElementById('no-acceso').style.display = 'flex';
+}
+
+async function verificarAcceso(name, email, picture) {
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('verificando-view').style.display = 'block';
+
+  try {
+    const res = await fetch(WEBAPP_URL + "?email=" + encodeURIComponent(email));
+    const data = await res.json();
+    if (data.habilitado) {
+      mostrarPerfil(name, email, picture);
+    } else {
+      mostrarNoAcceso();
+    }
+  } catch(e) {
+    mostrarNoAcceso();
+  }
 }
 
 function handleCredentialResponse(response) {
@@ -266,13 +357,15 @@ function handleCredentialResponse(response) {
   sessionStorage.setItem('opm_user', JSON.stringify({
     name: user.name, email: user.email, picture: user.picture
   }));
-  mostrarPerfil(user.name, user.email, user.picture);
+  verificarAcceso(user.name, user.email, user.picture);
 }
 
 function logout() {
   sessionStorage.removeItem('opm_user');
   document.getElementById('login-view').style.display = 'block';
   document.getElementById('perfil').style.display = 'none';
+  document.getElementById('no-acceso').style.display = 'none';
+  document.getElementById('verificando-view').style.display = 'none';
   if (typeof google !== 'undefined') google.accounts.id.disableAutoSelect();
 }
 
@@ -280,7 +373,7 @@ window.addEventListener('load', function() {
   const saved = sessionStorage.getItem('opm_user');
   if (saved) {
     const u = JSON.parse(saved);
-    mostrarPerfil(u.name, u.email, u.picture);
+    verificarAcceso(u.name, u.email, u.picture);
   }
 });
 </script>
