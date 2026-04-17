@@ -39,9 +39,7 @@ body {
   background: linear-gradient(90deg, #1a5fa8, #2e86de, #54a0ff);
 }
 
-.brand {
-  margin-bottom: 28px;
-}
+.brand { margin-bottom: 28px; }
 
 .brand-letters {
   display: flex;
@@ -103,7 +101,6 @@ body {
   margin-top: 4px;
 }
 
-/* ---- PERFIL ---- */
 #perfil {
   display: none;
   flex-direction: column;
@@ -203,7 +200,6 @@ body {
 <body>
 
 <div class="card">
-
   <div class="brand">
     <div class="brand-letters">
       <span>O</span><span>P</span><span>M</span>
@@ -212,14 +208,12 @@ body {
     <div class="brand-line"></div>
   </div>
 
-  <!-- Vista login -->
   <div id="login-view">
     <p class="login-heading">Tu espacio de formación</p>
     <p class="login-sub">Iniciá sesión con tu cuenta Google<br>para acceder a los cursos</p>
-
     <div id="google-btn-container">
       <div id="g_id_onload"
-        data-client_id="69585621593-rgh7f5t0njblcg5j8dnckqp6msclgbl3.apps.googleusercontent.com"
+        data-client_id="1003206709363-7f7ajssnb3qcituof8reiqditjck3sfj.apps.googleusercontent.com"
         data-callback="handleCredentialResponse"
         data-auto_prompt="false">
       </div>
@@ -237,7 +231,6 @@ body {
     <p class="footer-note">Osiscka · Ponce Laso · Morales</p>
   </div>
 
-  <!-- Vista perfil -->
   <div id="perfil">
     <div class="avatar-wrap">
       <img id="user-avatar" src="" alt="Foto de perfil" class="user-avatar"/>
@@ -249,7 +242,6 @@ body {
     <div class="divider-profile"></div>
     <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
   </div>
-
 </div>
 
 <script>
